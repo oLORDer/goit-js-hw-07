@@ -3,6 +3,9 @@
   --animation-duration: 250ms;
 }
 
+
+@import url('https://cdn.jsdelivr.net/npm/basiclightbox@5.0.4/dist/basicLightbox.min.css');
+
 .gallery {
   display: grid;
   max-width: 1140px;
@@ -42,3 +45,4 @@
 .gallery__link:hover {
   cursor: zoom-in;
 }
+
