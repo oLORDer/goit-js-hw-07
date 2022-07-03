@@ -1,26 +1,39 @@
-import { galleryItems } from './gallery-items.js';
-import * as basicLightbox from 'https://cdn.jsdelivr.net/npm/basiclightbox@5.0.4/dist/basicLightbox.min.js';
-// Change code below this line
+import { galleryItems } from "./gallery-items.js";
 
-// const galleryItem = galleryItems.map(item =>
-//     `<div class="gallery__item">
-//     <a class="gallery__link" href=${item.original}>
-//       <img
-//         class="gallery__image"
-//         src=${item.preview}
-//         data-source=${item.original}
-//         alt=${item.description}
-//       />
-//     </a>
-//   </div>`
-//   );
+const galleryImages = document.querySelector(".gallery");
+const galleryMarkup = createImages(galleryItems);
 
-console.log(basicLightbox);
+galleryImages.insertAdjacentHTML("beforeend", galleryMarkup);
 
-const instance = basicLightbox.create(`<img src="assets/images/image.png" width="800" height="600">`);
+function createImages(arr) {
+  return arr
+    .map(({ preview, original, description }) => {
+      return `<div class="gallery__item">
+  <a class="gallery__link" href="${original}">
+    <img
+      class="gallery__image"
+      src="${preview}"
+      data-source="${original}"
+      alt="${description}"
+    />
+  </a>
+</div>`;
+    })
+    .join("");
+}
 
-instance.show();
+galleryImages.addEventListener("click", selectImage);
 
-// document.querySelector('.gallery').insertAdjacentHTML('afterend', galleryItem.join(''));
+function selectImage(e) {
+  e.preventDefault();
 
-// console.log(galleryItem);
+  if (e.target.nodeName !== "IMG") return;
+
+  const selectedImg = e.target.dataset.source;
+
+  const originalImg = basicLightbox.create(`<img src=${selectedImg}>`);
+
+  originalImg.show();
+
+  galleryImages.addEventListener("keydown", (e) => e.key === 'Escape' ? originalImg.close() : false);
+}
