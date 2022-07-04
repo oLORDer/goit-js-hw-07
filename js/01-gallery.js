@@ -1,9 +1,8 @@
-import { galleryItems } from "./gallery-items.js";
+import { galleryItems } from './gallery-items.js';
 
-const galleryImages = document.querySelector(".gallery");
-const galleryMarkup = createImages(galleryItems);
+const galleryImages = document.querySelector('.gallery');
 
-galleryImages.insertAdjacentHTML("beforeend", galleryMarkup);
+galleryImages.insertAdjacentHTML('beforeend', createImages(galleryItems));
 
 function createImages(arr) {
   return arr
@@ -19,21 +18,30 @@ function createImages(arr) {
   </a>
 </div>`;
     })
-    .join("");
+    .join('');
 }
 
-galleryImages.addEventListener("click", selectImage);
+galleryImages.addEventListener('click', selectImage);
+
+function onCloseModal(e, instance) {
+  if (e.key === 'Escape') instance.close();
+}
 
 function selectImage(e) {
   e.preventDefault();
 
-  if (e.target.nodeName !== "IMG") return;
+  if (e.target.nodeName !== 'IMG') return;
 
   const selectedImg = e.target.dataset.source;
 
-  const originalImg = basicLightbox.create(`<img src=${selectedImg}>`);
+  const originalImg = basicLightbox.create(`<img src=${selectedImg}>`, {
+    onShow: (instance) => {
+      document.onkeyup = (e) => {
+        onCloseModal(e, instance);
+      };
+    },
+    onClose: () => (document.onkeyup = null),
+  });
 
   originalImg.show();
-
-  galleryImages.addEventListener("keydown", (e) => e.key === 'Escape' ? originalImg.close() : false);
 }
